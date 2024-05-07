@@ -1,7 +1,6 @@
-Practical 1: Consider telephone book database of N clients. Make use of a hash table implementationtoquickly
+/*Practical 1: Consider telephone book database of N clients. Make use of a hash table implementationtoquickly
 lookupclient‘stelephonenumber. Makeuseoftwo collision handling techniques and compare them
-using number of comparisons required to find a
-set of telephone numbers*/
+using number of comparisons required to find a set of telephone numbers*/
 
 #include<iostream>
 #include<string.h>
