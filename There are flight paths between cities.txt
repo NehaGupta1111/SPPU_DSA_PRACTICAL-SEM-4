@@ -1,0 +1,259 @@
+﻿/* Practical 6:There are flight paths between cities. If there is a flight between city A and city B then there is an
+edge between the cities. The cost of the edge can be the time that flight take to reach city B from
+A, or the amount of fuel used for the journey. Represent this as a graph. The node can be
+represented by airport name or name of the city. Use adjacency list representation of the graph or
+use adjacency matrix representation of the graph.
+Check whether the graph is connected or not. Justify the storage representation used.*/
+
+
+#include<iostream>
+#include<string.h>
+#include<stack>
+using namespace std;
+
+
+class flight {
+private:
+    int am[10][10];
+    char city_index[10][10];
+    int city_count;
+
+
+public:
+    flight();
+    int create();
+    void display();
+    bool isConnected();
+    void DFS(int v, bool visited[]);
+};
+
+
+flight::flight() {
+    for (int i = 0; i < 10; i++) {
+        strcpy(city_index[i], "xx");
+    }
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 10; j++) {
+            am[i][j] = 0;
+        }
+    }
+}
+
+
+int flight::create() {
+    int si, di, wt;
+    char s[10], d[10], c;
+    city_count = 0;
+    do {
+        cout << "\n\tEnter Source City      : ";
+        cin >> s;
+        cout << "\n\tEnter Destination City : ";
+        cin >> d;
+        for (int j = 0; j < city_count; j++) {
+            if (strcmp(city_index[j], s) == 0)
+                si = j;
+            if (strcmp(city_index[j], d) == 0)
+                di = j;
+        }
+
+
+        if (si == city_count) {
+            strcpy(city_index[city_count], s);
+            city_count++;
+        }
+
+
+        if (di == city_count) {
+            strcpy(city_index[city_count], d);
+            city_count++;
+        }
+
+
+        cout << "\n\tEnter Distance From " << s << " To " << d << ": ";
+        cin >> wt;
+
+
+        am[si][di] = wt;
+
+
+        cout << "\n\t Do you want to add more cities.....(y/n) : ";
+        cin >> c;
+    } while (c == 'y' || c == 'Y');
+
+
+    return city_count;
+}
+
+
+void flight::display() {
+    cout << "\n\t Displaying Adjacency Matrix :\n\t";
+    for (int i = 0; i < city_count; i++)
+        cout << "\t" << city_index[i];
+    cout << "\n";
+
+
+    for (int i = 0; i < city_count; i++) {
+        cout << "\t" << city_index[i];
+        for (int j = 0; j < city_count; j++) {
+            cout << "\t" << am[i][j];
+        }
+        cout << "\n";
+    }
+}
+
+
+void flight::DFS(int v, bool visited[]) {
+    visited[v] = true;
+
+
+    for (int i = 0; i < city_count; i++) {
+        if (am[v][i] != 0 && !visited[i]) {
+            DFS(i, visited);
+        }
+    }
+}
+
+
+bool flight::isConnected() {
+    bool* visited = new bool[city_count];
+    for (int i = 0; i < city_count; i++) {
+        visited[i] = false;
+    }
+
+
+    // Find the first non-zero element in the adjacency matrix
+    int start = 0;
+    for (int i = 0; i < city_count; i++) {
+        bool found = false;
+        for (int j = 0; j < city_count; j++) {
+            if (am[i][j] != 0) {
+                found = true;
+                break;
+            }
+        }
+        if (found) {
+            start = i;
+            break;
+        }
+    }
+
+
+    // Perform DFS traversal
+    DFS(start, visited);
+
+
+    // Check if all nodes are visited
+    for (int i = 0; i < city_count; i++) {
+        if (!visited[i]) {
+            delete[] visited;
+            return false;
+        }
+    }
+
+
+    delete[] visited;
+    return true;
+}
+
+
+int main() {
+    flight f;
+    int city_count;
+    char c;
+    do {
+        cout << "\n\t*** Flight Main Menu *****";
+        cout << "\n\t1. Create \n\t2. Adjacency Matrix\n\t3. Check Connectivity\n\t4. Exit";
+        cout << "\n\t.....Enter your choice : ";
+        int n;
+        cin >> n;
+        switch (n) {
+        case 1:
+            city_count = f.create();
+            break;
+        case 2:
+            f.display();
+            break;
+        case 3:
+            if (city_count == 0) {
+                cout << "\n\tGraph is empty! Create a graph first." << endl;
+            } else if (f.isConnected()) {
+                cout << "\n\tThe graph representing flight paths between cities is connected." << endl;
+            } else {
+                cout << "\n\tThe graph representing flight paths between cities is not connected." << endl;
+            }
+            break;
+        case 4:
+            return 0;
+        }
+        cout << "\n\t Do you Want to Continue in Main Menu....(y/n) : ";
+        cin >> c;
+    } while (c == 'y' || c == 'Y');
+    return 0;
+}
+
+
+/* OUTPUT
+        *** Flight Main Menu *****
+        1. Create 
+        2. Adjacency Matrix
+        3. Check Connectivity
+        4. Exit
+        .....Enter your choice : 1
+
+
+        Enter Source City      : Nashik
+
+
+        Enter Destination City : mumbai
+
+
+        Enter Distance From Nashik To mumbai: 234
+
+
+         Do you want to add more cities.....(y/n) : n
+
+
+         Do you Want to Continue in Main Menu....(y/n) : y
+
+
+        *** Flight Main Menu *****
+        1. Create 
+        2. Adjacency Matrix
+        3. Check Connectivity
+        4. Exit
+        .....Enter your choice : 2
+
+
+         Displaying Adjacency Matrix :
+                Nashik
+        Nashik        234
+
+
+         Do you Want to Continue in Main Menu....(y/n) : y
+
+
+        *** Flight Main Menu *****
+        1. Create 
+        2. Adjacency Matrix
+        3. Check Connectivity
+        4. Exit
+        .....Enter your choice : 3
+
+
+        The graph representing flight paths between cities is connected.
+
+
+         Do you Want to Continue in Main Menu....(y/n) : y
+
+
+        *** Flight Main Menu *****
+        1. Create 
+        2. Adjacency Matrix
+        3. Check Connectivity
+        4. Exit
+        .....Enter your choice : 4
+
+
+
+
+=== Code Execution Successful === */
