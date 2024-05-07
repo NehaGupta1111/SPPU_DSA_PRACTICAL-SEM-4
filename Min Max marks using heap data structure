@@ -120,3 +120,15 @@ int main()
    cout<<"\nMaximum Marks : "<<max<<"\nMinimum marks : "<<min;
  return 0;
 }
+
+/* OUTPUT 
+Enter the number of Students : 2
+Enter the marks :  1: 23
+Enter the marks :  2: 43
+
+Sorted Data : ASCENDING : ->23->43
+Sorted Data : DESCENDING: ->43->23
+Maximum Marks : 43
+Minimum marks : 23
+
+=== Code Execution Successful === */
